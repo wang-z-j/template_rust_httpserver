@@ -1,8 +1,12 @@
+mod models;
+mod server;
 use std::{
     io::{self, Read, Write},
     net::{TcpListener, TcpStream},
     thread,
 };
+
+use server::{handler, router::router_handler};
 
 fn main() {
     let server_address = "127.0.0.1:7878";
@@ -37,17 +41,18 @@ fn start_server(address: &str) -> io::Result<()> {
 
 fn handle_connection(mut stream: TcpStream) -> io::Result<()> {
     // 创建缓冲区
-    let mut buf = [0; 512];
-    // 读取客户端发送的数据
-    stream.read(&mut buf)?;
-    // 将字节流转为字符串
-    let request = String::from_utf8_lossy(&buf);
-    println!("Request:\n{}", request);
-
-    // 简单解析请求
-    let response =
-        "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: 13\r\n\r\nHello, World!";
-    // 发送响应
-    stream.write_all(response.as_bytes())?;
-    Ok(())
+    // let mut buf = [0; 512];
+    // // 读取客户端发送的数据
+    // stream.read(&mut buf)?;
+    // // 将字节流转为字符串
+    // let request = String::from_utf8_lossy(&buf);
+    // println!("Request:\n{}", request);
+    // handler.
+    // // 简单解析请求
+    // let response =
+    //     "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: 13\r\n\r\nHello, World!";
+    // // 发送响应
+    // stream.write_all(response.as_bytes())?;
+    // Ok(())
+    router_handler(stream)
 }
